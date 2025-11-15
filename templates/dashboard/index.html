@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-bold">Recent Workouts</span>
+        <a href="{{ url_for('workouts.new_workout') }}" class="btn btn-sm btn-primary">Quick Add</a>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for w in recent_workouts %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">{{ w.type|title }} - {{ w.date.strftime('%Y-%m-%d') }}</div>
+              <small class="text-muted">{{ w.duration }} min{% if w.calories_burned %}, {{ w.calories_burned }} kcal{% endif %}</small>
+            </div>
+            <a href="{{ url_for('workouts.view_workout', workout_id=w.id) }}" class="btn btn-sm btn-outline-secondary">View</a>
+          </li>
+        {% else %}
+          <li class="list-group-item">No workouts logged yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Weekly Activity</div>
+      <div class="card-body">
+        <div class="small text-muted mb-2">Workout counts and calories for last 7 days.</div>
+        <canvas id="chartCalories" height="140"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Weight Progress (30 days)</div>
+      <div class="card-body">
+        <canvas id="chartWeight" height="180"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Today Calories vs Goal</div>
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="display-6">{{ total_cal_today }}</div>
+            <div class="text-muted">Calories consumed today</div>
+          </div>
+          <div>
+            <div class="display-6">{{ remaining_cal_today }}</div>
+            <div class="text-muted">Remaining (Goal: {{ current_user.calorie_goal }})</div>
+          </div>
+        </div>
+        <div class="progress mt-3">
+          {% set pct = min(100, (total_cal_today / (current_user.calorie_goal or 1)) * 100) %}
+          <div class="progress-bar" role="progressbar" style="width: {{ '%.0f'|format(pct) }}%">
+            {{ '%.0f'|format(pct) }}%
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header fw-bold">Workout Frequency (30-day heatmap)</div>
+      <div class="card-body">
+        <div id="heatmap" class="heatmap-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header fw-bold">Statistics</div>
+      <div class="card-body row text-center">
+        <div class="col-6 col-md-3">
+          <div class="display-6">{{ stats.total_workouts }}</div>
+          <div class="text-muted">Total workouts</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="display-6">{{ stats.total_time }}</div>
+          <div class="text-muted">Total minutes</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="display-6">{{ stats.avg_calories_burned }}</div>
+          <div class="text-muted">Avg kcal burned</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <a href="{{ url_for('dashboard.report', range_='week') }}" class="btn btn-outline-primary w-100">Weekly Report</a>
+          <a href="{{ url_for('dashboard.report', range_='month') }}" class="btn btn-outline-secondary w-100 mt-2">Monthly Report</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const resp = await fetch("{{ url_for('api.dashboard_data') }}");
+    const data = await resp.json();
+
+    // Weight line chart
+    const ctxW = document.getElementById("chartWeight");
+    if (ctxW) {
+      new Chart(ctxW, {
+        type: "line",
+        data: {
+          datasets: [{
+            label: "Weight (kg)",
+            data: data.weight_series,
+            borderColor: "#0d6efd",
+            backgroundColor: "rgba(13,110,253,.15)",
+            parsing: {xAxisKey: "x", yAxisKey: "y"},
+            tension: .2,
+          }]
+        },
+        options: {
+          scales: { x: { type: "category" }, y: { beginAtZero: false } },
+          plugins: { legend: { display: true } }
+        }
+      });
+    }
+
+    // Calories bar chart
+    const ctxC = document.getElementById("chartCalories");
+    if (ctxC) {
+      new Chart(ctxC, {
+        type: "bar",
+        data: {
+          labels: data.calories_daily.map(d => d.date),
+          datasets: [
+            { label: "Calories", data: data.calories_daily.map(d => d.calories), backgroundColor: "#198754" },
+            { label: "Goal", data: data.calories_daily.map(d => d.goal), type: "line", borderColor: "#dc3545" }
+          ]
+        },
+        options: {
+          scales: { y: { beginAtZero: true } },
+          plugins: { legend: { display: true } }
+        }
+      });
+    }
+
+    // Heatmap simple grid
+    const heat = {};
+    data.heatmap.forEach(d => heat[d.date] = d.count);
+    const container = document.getElementById("heatmap");
+    if (container) {
+      const today = new Date();
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(today.getDate() - i);
+        const key = d.toISOString().slice(0,10);
+        const count = heat[key] || 0;
+        const level = Math.min(4, count);
+        const cell = document.createElement("div");
+        cell.className = `heat-cell level-${level}`;
+        cell.title = `${key}: ${count} workouts`;
+        container.appendChild(cell);
+      }
+    }
+  } catch (e) {
+    console.error("Failed to load dashboard data", e);
+  }
+});
+</script>
+{% endblock %}

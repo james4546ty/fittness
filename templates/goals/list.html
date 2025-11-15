@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Goals - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Goals</h2>
+  <a href="{{ url_for('goals.new_goal') }}" class="btn btn-primary">New Goal</a>
+</div>
+
+<div class="row g-3">
+  {% for g in goals %}
+  {% set pct = '%.0f'|format(g.progress_percent()) %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 border-{{ 'success' if g.status == 'completed' else 'secondary' }}">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div class="fw-bold">{{ g.goal_type|replace('_',' ')|title }}</div>
+          <div class="text-muted small">{{ g.deadline.strftime('%Y-%m-%d') if g.deadline else 'No deadline' }}</div>
+        </div>
+        <div class="progress my-2" style="height:10px;">
+          <div class="progress-bar" role="progressbar" style="width: {{ pct }}%"></div>
+        </div>
+        <div class="small text-muted">{{ g.current_value or 0 }} / {{ g.target_value }}</div>
+      </div>
+      <div class="card-footer d-flex justify-content-between">
+        <span class="badge text-bg-{{ 'success' if g.status == 'completed' else 'secondary' }}">{{ g.status|title }}</span>
+        <a href="{{ url_for('goals.edit_goal', goal_id=g.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12"><div class="alert alert-info">No goals yet.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

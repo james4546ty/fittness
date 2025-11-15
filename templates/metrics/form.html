@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card">
+      <div class="card-header fw-bold">{{ title }}</div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-4">{{ form.date.label(class="form-label") }}{{ form.date(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.weight.label(class="form-label") }}{{ form.weight(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.body_fat_percentage.label(class="form-label") }}{{ form.body_fat_percentage(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.height_cm.label(class="form-label") }}{{ form.height_cm(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.chest.label(class="form-label") }}{{ form.chest(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.waist.label(class="form-label") }}{{ form.waist(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.hips.label(class="form-label") }}{{ form.hips(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.arms.label(class="form-label") }}{{ form.arms(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.legs.label(class="form-label") }}{{ form.legs(class="form-control") }}</div>
+            <div class="col-md-12">{{ form.photo.label(class="form-label") }}{{ form.photo(class="form-control") }}</div>
+          </div>
+          <div class="d-grid mt-3">{{ form.submit(class="btn btn-primary") }}</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

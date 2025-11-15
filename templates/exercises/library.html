@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Exercise Library - Fitness Tracker{% endblock %}
+{% block content %}
+<h2>Exercise Library</h2>
+<div class="row g-3">
+  {% for ex in library %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div class="fw-bold">{{ ex.name }}</div>
+          <span class="badge text-bg-secondary">{{ ex.category }}</span>
+        </div>
+        <p class="mt-2 mb-1">{{ ex.description }}</p>
+        <p class="small text-muted mb-0">Tips: {{ ex.tips }}</p>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12"><div class="alert alert-info">No exercises.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

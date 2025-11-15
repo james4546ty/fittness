@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Workout #{{ workout.id }} - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">{{ workout.type|title }} — {{ workout.date.strftime('%Y-%m-%d') }}</h2>
+  <div>
+    <a class="btn btn-outline-secondary" href="{{ url_for('workouts.edit_workout', workout_id=workout.id) }}">Edit</a>
+    <form method="post" action="{{ url_for('workouts.delete_workout', workout_id=workout.id) }}" class="d-inline" onsubmit="return confirm('Delete this workout?')">
+      {{ csrf_token() }}
+      <button class="btn btn-outline-danger">Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header fw-bold">Details</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Duration: {{ workout.duration }} min</li>
+        <li class="list-group-item">Calories: {{ workout.calories_burned or '—' }}</li>
+        <li class="list-group-item">Notes: {{ workout.notes or '—' }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-bold">Exercises</span>
+        <button class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#addExercise">Add</button>
+      </div>
+      <div class="card-body">
+        <div class="collapse" id="addExercise">
+          <form method="post" action="{{ url_for('workouts.add_exercise', workout_id=workout.id) }}" class="mb-3">
+            {{ ex_form.hidden_tag() }}
+            <div class="row g-2">
+              <div class="col-md-5">{{ ex_form.name(class="form-control", placeholder="Name") }}</div>
+              <div class="col-md-2">{{ ex_form.sets(class="form-control", placeholder="Sets") }}</div>
+              <div class="col-md-2">{{ ex_form.reps(class="form-control", placeholder="Reps") }}</div>
+              <div class="col-md-3">{{ ex_form.weight(class="form-control", placeholder="Weight (kg)") }}</div>
+            </div>
+            <div class="d-grid mt-2">{{ ex_form.submit(class="btn btn-primary btn-sm") }}</div>
+          </form>
+        </div>
+        <ul class="list-group">
+          {% for e in workout.exercises %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>{{ e.name }}</div>
+            <div class="text-muted small">{{ e.sets or '—' }} x {{ e.reps or '—' }} @ {{ e.weight or '—' }}kg</div>
+            <form method="post" action="{{ url_for('workouts.delete_exercise', exercise_id=e.id) }}" onsubmit="return confirm('Remove exercise?')">
+              {{ csrf_token() }}
+              <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </li>
+          {% else %}
+          <li class="list-group-item">No exercises recorded.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

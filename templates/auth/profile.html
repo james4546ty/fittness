@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Profile - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-6">
+    <div class="card">
+      <div class="card-header fw-bold">Profile</div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-6">
+              {{ form.username.label(class="form-label") }}
+              {{ form.username(class="form-control") }}
+              {% for e in form.username.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+              {{ form.email.label(class="form-label") }}
+              {{ form.email(class="form-control") }}
+              {% for e in form.email.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+              {{ form.calorie_goal.label(class="form-label") }}
+              {{ form.calorie_goal(class="form-control") }}
+              {% for e in form.calorie_goal.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+              {{ form.water_goal_ml.label(class="form-label") }}
+              {{ form.water_goal_ml(class="form-control") }}
+              {% for e in form.water_goal_ml.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-md-12 form-check">
+              {{ form.dark_mode(class="form-check-input") }}
+              {{ form.dark_mode.label(class="form-check-label") }}
+            </div>
+          </div>
+          <div class="d-grid mt-3">
+            {{ form.submit(class="btn btn-primary") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

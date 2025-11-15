@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Water Intake - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Log Water</div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-6">{{ form.date.label(class="form-label") }}{{ form.date(class="form-control") }}</div>
+            <div class="col-md-6">{{ form.amount_ml.label(class="form-label") }}{{ form.amount_ml(class="form-control") }}</div>
+          </div>
+          <div class="d-grid mt-3">{{ form.submit(class="btn btn-primary") }}</div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-bold">Today's Progress</div>
+      <div class="card-body">
+        <div class="display-6">{{ total_today }} / {{ current_user.water_goal_ml }} ml</div>
+        <div class="progress mt-3" style="height: 12px;">
+          <div class="progress-bar" style="width: {{ pct }}%"></div>
+        </div>
+        <form method="post" action="{{ url_for('extras.water_quick') }}" class="mt-3 d-flex gap-2">
+          {{ csrf_token() }}
+          <button class="btn btn-outline-primary" name="amount" value="250" type="submit">+250 ml</button>
+          <button class="btn btn-outline-primary" name="amount" value="500" type="submit">+500 ml</button>
+          <button class="btn btn-outline-primary" name="amount" value="750" type="submit">+750 ml</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

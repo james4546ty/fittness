@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Sleep Tracking - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header fw-bold">Log Sleep</div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-4">{{ form.date.label(class="form-label") }}{{ form.date(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.hours_slept.label(class="form-label") }}{{ form.hours_slept(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.quality_rating.label(class="form-label") }}{{ form.quality_rating(class="form-select") }}</div>
+          </div>
+          <div class="d-grid mt-3">{{ form.submit(class="btn btn-primary") }}</div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header fw-bold">Last 7 Days</div>
+      <div class="card-body">
+        <div class="display-6">Avg: {{ '%.1f'|format(avg_hours) }} h</div>
+        <ul class="list-group mt-2">
+          {% for s in logs %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ s.date.strftime('%Y-%m-%d') }}</span>
+            <span class="text-muted">{{ s.hours_slept }} h{% if s.quality_rating %} • Quality {{ s.quality_rating }}{% endif %}</span>
+          </li>
+          {% else %}
+          <li class="list-group-item">No logs.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

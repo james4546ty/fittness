@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card">
+      <div class="card-header fw-bold">{{ title }}</div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-6">{{ form.goal_type.label(class="form-label") }}{{ form.goal_type(class="form-select") }}</div>
+            <div class="col-md-6">{{ form.status.label(class="form-label") }}{{ form.status(class="form-select") }}</div>
+            <div class="col-md-6">{{ form.target_value.label(class="form-label") }}{{ form.target_value(class="form-control") }}</div>
+            <div class="col-md-6">{{ form.current_value.label(class="form-label") }}{{ form.current_value(class="form-control") }}</div>
+            <div class="col-md-6">{{ form.deadline.label(class="form-label") }}{{ form.deadline(class="form-control") }}</div>
+          </div>
+          <div class="d-grid mt-3">{{ form.submit(class="btn btn-primary") }}</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
