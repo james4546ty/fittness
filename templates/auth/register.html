@@ -1,40 +1,38 @@
 {% extends "base.html" %}
-{% block title %}Register - Fitness Tracker{% endblock %}
+{% block title %}Register - FitMetrics{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-md-6 col-lg-5">
-    <div class="card">
-      <div class="card-header fw-bold">Create Account</div>
-      <div class="card-body">
-        <form method="post" novalidate>
-          {{ form.hidden_tag() }}
-          <div class="mb-3">
-            {{ form.username.label(class="form-label") }}
-            {{ form.username(class="form-control", placeholder="username") }}
-            {% for e in form.username.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
-          </div>
-          <div class="mb-3">
-            {{ form.email.label(class="form-label") }}
-            {{ form.email(class="form-control", placeholder="you@example.com") }}
-            {% for e in form.email.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
-          </div>
-          <div class="mb-3">
-            {{ form.password.label(class="form-label") }}
-            {{ form.password(class="form-control", placeholder="At least 8 chars, mix of cases and numbers") }}
-            {% for e in form.password.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
-          </div>
-          <div class="mb-3">
-            {{ form.confirm_password.label(class="form-label") }}
-            {{ form.confirm_password(class="form-control", placeholder="Confirm password") }}
-            {% for e in form.confirm_password.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
-          </div>
-          <div class="d-grid">
-            {{ form.submit(class="btn btn-primary") }}
-          </div>
-        </form>
-        <div class="mt-3">
-          <a href="{{ url_for('auth.login') }}">Already have an account? Login</a>
+    <div class="glass-card p-4" data-aos="fade-up">
+      <h3 class="fw-bold mb-3 text-center">Create Account</h3>
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-floating-label">
+          {{ form.username(class="form-control", placeholder=" ") }}
+          <label>Username</label>
+          {% for e in form.username.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
         </div>
+        <div class="form-floating-label">
+          {{ form.email(class="form-control", placeholder=" ") }}
+          <label>Email</label>
+          {% for e in form.email.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="form-floating-label">
+          {{ form.password(class="form-control", placeholder=" ") }}
+          <label>Password</label>
+          {% for e in form.password.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="form-floating-label">
+          {{ form.confirm_password(class="form-control", placeholder=" ") }}
+          <label>Confirm Password</label>
+          {% for e in form.confirm_password.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="d-grid">
+          {{ form.submit(class="btn btn-primary btn-lift") }}
+        </div>
+      </form>
+      <div class="mt-3 text-center">
+        <a href="{{ url_for('auth.login') }}">Already have an account? Sign In</a>
       </div>
     </div>
   </div>

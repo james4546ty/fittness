@@ -1,6 +1,6 @@
 import os
 from datetime import timedelta
-from flask import Flask
+from flask import Flask, render_template
 from extensions import db, login_manager, csrf
 
 def create_app():
@@ -59,14 +59,23 @@ def create_app():
         from models import User  # ensure models are imported
         db.create_all()
 
-    # Root route
+    # Root route: Landing page when not authenticated
     from flask import redirect, url_for
     from flask_login import current_user
     @app.route("/")
     def home():
         if current_user.is_authenticated:
             return redirect(url_for("dashboard.index"))
-        return redirect(url_for("auth.login"))
+        return render_template("landing.html")
+
+    # Error handlers
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template("errors/404.html"), 404
+
+    @app.errorhandler(500)
+    def server_error(e):
+        return render_template("errors/500.html"), 500
 
     return app
 
