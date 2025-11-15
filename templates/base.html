@@ -70,11 +70,12 @@
       {% endfor %}
     {% endif %}
   {% endwith %}
+{% endif %}
 
-  {% block content %}{% endblock %}
+{% block content %}{% endblock %}
+
+{% if current_user.is_authenticated %}
 </main>
-{% else %}
-  {% block content %}{% endblock %}
 {% endif %}
 
 <footer class="text-center text-muted py-4">
