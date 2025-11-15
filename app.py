@@ -59,6 +59,15 @@ def create_app():
         from models import User  # ensure models are imported
         db.create_all()
 
+    # Root route
+    from flask import redirect, url_for
+    from flask_login import current_user
+    @app.route("/")
+    def home():
+        if current_user.is_authenticated:
+            return redirect(url_for("dashboard.index"))
+        return redirect(url_for("auth.login"))
+
     return app
 
 
