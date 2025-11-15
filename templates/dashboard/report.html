@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ range_|title }} Report - Fitness Tracker{% endblock %}
+{% block content %}
+<h2 class="mb-3">{{ range_|title }} Report</h2>
+
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="display-6">{{ total_workouts }}</div>
+        <div class="text-muted">Workouts</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="display-6">{{ total_time }}</div>
+        <div class="text-muted">Total Minutes</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="display-6">{{ total_calories_food }}</div>
+        <div class="text-muted">Calories Consumed</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="display-6">{{ avg_weight if avg_weight is not none else '—' }}</div>
+        <div class="text-muted">Avg Weight</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="mt-4">Workouts</h3>
+<ul class="list-group mb-3">
+  {% for w in workouts %}
+  <li class="list-group-item d-flex justify-content-between">
+    <span>{{ w.date.strftime('%Y-%m-%d') }} — {{ w.type|title }}</span>
+    <span class="text-muted">{{ w.duration }} min</span>
+  </li>
+  {% else %}
+  <li class="list-group-item">No workouts.</li>
+  {% endfor %}
+</ul>
+
+<h3>Nutrition</h3>
+<ul class="list-group mb-3">
+  {% for n in nutrition %}
+  <li class="list-group-item d-flex justify-content-between">
+    <span>{{ n.date.strftime('%Y-%m-%d') }} — {{ n.meal_type|title }}: {{ n.food_name }}</span>
+    <span class="text-muted">{{ n.calories }} kcal</span>
+  </li>
+  {% else %}
+  <li class="list-group-item">No nutrition logs.</li>
+  {% endfor %}
+</ul>
+
+<h3>Body Metrics</h3>
+<ul class="list-group">
+  {% for m in metrics %}
+  <li class="list-group-item">
+    {{ m.date.strftime('%Y-%m-%d') }} — Weight: {{ m.weight }} kg
+    {% if m.body_fat_percentage is not none %}, Body Fat: {{ m.body_fat_percentage }}%{% endif %}
+  </li>
+  {% else %}
+  <li class="list-group-item">No metrics entries.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

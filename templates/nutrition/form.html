@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card">
+      <div class="card-header fw-bold">{{ title }}</div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-4">{{ form.date.label(class="form-label") }}{{ form.date(class="form-control") }}</div>
+            <div class="col-md-4">{{ form.meal_type.label(class="form-label") }}{{ form.meal_type(class="form-select") }}</div>
+            <div class="col-md-4">{{ form.food_name.label(class="form-label") }}{{ form.food_name(class="form-control") }}</div>
+            <div class="col-md-3">{{ form.calories.label(class="form-label") }}{{ form.calories(class="form-control") }}</div>
+            <div class="col-md-3">{{ form.protein.label(class="form-label") }}{{ form.protein(class="form-control") }}</div>
+            <div class="col-md-3">{{ form.carbs.label(class="form-label") }}{{ form.carbs(class="form-control") }}</div>
+            <div class="col-md-3">{{ form.fats.label(class="form-label") }}{{ form.fats(class="form-control") }}</div>
+          </div>
+          <div class="d-grid mt-3">{{ form.submit(class="btn btn-primary") }}</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

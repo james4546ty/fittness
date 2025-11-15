@@ -1,0 +1,24 @@
+/* Basic custom styles */
+body {
+  background-color: var(--bs-body-bg);
+}
+
+.navbar-brand {
+  letter-spacing: 0.5px;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(30, 18px);
+  gap: 4px;
+}
+.heat-cell {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background-color: #e9ecef;
+}
+.heat-cell.level-1 { background-color: #cfe2ff; }
+.heat-cell.level-2 { background-color: #9ec5fe; }
+.heat-cell.level-3 { background-color: #6ea8fe; }
+.heat-cell.level-4 { background-color: #3d8bfd; }

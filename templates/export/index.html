@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Export Data - Fitness Tracker{% endblock %}
+{% block content %}
+<h2>Export Data</h2>
+<p class="text-muted">Download your data as CSV.</p>
+<div class="list-group">
+  <a class="list-group-item list-group-item-action" href="{{ url_for('export.export_workouts') }}">Workouts CSV</a>
+  <a class="list-group-item list-group-item-action" href="{{ url_for('export.export_nutrition') }}">Nutrition CSV</a>
+  <a class="list-group-item list-group-item-action" href="{{ url_for('export.export_metrics') }}">Body Metrics CSV</a>
+  <a class="list-group-item list-group-item-action" href="{{ url_for('export.export_goals') }}">Goals CSV</a>
+  <a class="list-group-item list-group-item-action" href="{{ url_for('export.export_lifestyle') }}">Lifestyle (Water & Sleep) CSV</a>
+</div>
+{% endblock %}

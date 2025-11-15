@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Body Metrics - Fitness Tracker{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Body Metrics</h2>
+  <a href="{{ url_for('metrics.new_metrics') }}" class="btn btn-primary">Add Metrics</a>
+</div>
+
+<div class="row g-3">
+  {% for m in metrics %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="fw-bold">{{ m.date.strftime('%Y-%m-%d') }}</div>
+            <div>Weight: {{ m.weight }} kg</div>
+            {% if m.body_fat_percentage is not none %}<div>Body Fat: {{ m.body_fat_percentage }}%</div>{% endif %}
+            {% set ms = m.measurements_dict() %}
+            {% if ms %}
+              <div class="small text-muted mt-2">
+                {% for k,v in ms.items() %}
+                  <span class="badge text-bg-secondary me-1">{{ k|title }}: {{ v }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          {% if m.photo_path %}
+            <img src="{{ url_for('static', filename='uploads/' ~ m.photo_path) }}" class="rounded ms-2" alt="progress" style="width:84px;height:84px;object-fit:cover;">
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-footer text-end">
+        <a href="{{ url_for('metrics.edit_metrics', metrics_id=m.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12"><div class="alert alert-info">No metrics logged.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}
