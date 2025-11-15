@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="progress mt-3">
-          {% set pct = min(100, (total_cal_today / (current_user.calorie_goal or 1)) * 100) %}
+          {% set pct = ([100, (total_cal_today / (current_user.calorie_goal or 1)) * 100] | min) %}
           <div class="progress-bar" role="progressbar" style="width: {{ '%.0f'|format(pct) }}%">
             {{ '%.0f'|format(pct) }}%
           </div>
