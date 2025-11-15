@@ -1,12 +1,231 @@
-/* Basic custom styles */
+/* Global */
 body {
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bs-body-bg);
 }
 
-.navbar-brand {
-  letter-spacing: 0.5px;
+/* Navbar */
+.navbar-transparent {
+  background: transparent !important;
+  transition: background-color .3s ease, box-shadow .3s ease;
+}
+.navbar-transparent.scrolled {
+  background: rgba(31, 41, 55, 0.9) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.15);
+}
+.nav-link-underline {
+  position: relative;
+}
+.nav-link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%; height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transition: transform .2s ease;
+}
+.nav-link-underline:hover::after { transform: scaleX(1); }
+
+.btn-lift {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,.15);
+}
+.btn-glow {
+  box-shadow: 0 0 0 rgba(37, 99, 235, 0);
+  animation: glowPulse 2s infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(37,99,235,0); }
+  50% { box-shadow: 0 0 25px rgba(37,99,235,.25); }
+}
+.btn-pulse {
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
 }
 
+/* Hero */
+.hero {
+  position: relative;
+  color: #fff;
+}
+.gradient-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, #2563eb, #7c3aed, #06b6d4);
+  background-size: 200% 200%;
+  animation: gradientShift 12s ease infinite;
+  filter: saturate(1.1);
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.floating-icons i {
+  position: absolute; color: rgba(255,255,255,.7);
+  font-size: 2rem;
+  animation: floatY 6s ease-in-out infinite;
+}
+.floating-icons .float-1 { top: 20%; left: 15%; animation-delay: 0s; }
+.floating-icons .float-2 { top: 70%; left: 25%; animation-delay: .6s; }
+.floating-icons .float-3 { top: 30%; right: 15%; animation-delay: 1.2s; }
+.floating-icons .float-4 { bottom: 15%; right: 30%; animation-delay: 1.8s; }
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Scroll indicator */
+.scroll-indicator .mouse {
+  display: inline-block;
+  width: 24px; height: 40px;
+  border: 2px solid #fff; border-radius: 14px;
+  position: relative;
+}
+.scroll-indicator .mouse::after {
+  content: '';
+  position: absolute; top: 8px; left: 50%;
+  width: 4px; height: 8px; background: #fff; border-radius: 2px;
+  transform: translateX(-50%);
+  animation: wheel 1.5s ease infinite;
+}
+@keyframes wheel {
+  0% { opacity: 0; transform: translate(-50%, 0); }
+  50% { opacity: 1; transform: translate(-50%, 10px); }
+  100% { opacity: 0; transform: translate(-50%, 20px); }
+}
+
+/* Feature cards */
+.feature-card {
+  border-radius: 8px;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+}
+.feature-icon {
+  width: 48px; height: 48px; border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(37,99,235,.12);
+  color: #2563eb;
+  margin-bottom: 12px;
+}
+.feature-card:hover .feature-icon { animation: iconPulse .6s; }
+@keyframes iconPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* Stats section */
+.stats-section {
+  background: #111827;
+  color: #f9fafb;
+}
+.stat-number {
+  font-size: 2.25rem;
+  font-weight: 800;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  margin: 0 auto;
+  max-width: 820px;
+}
+.timeline::before {
+  content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+  width: 4px; background: #e5e7eb; transform: translateX(-50%);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+}
+.timeline-item .timeline-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #2563eb; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+}
+.timeline-item .timeline-content {
+  background: var(--bs-body-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.08);
+  padding: 12px 16px;
+  margin-left: 16px;
+}
+
+/* CTA */
+#cta {
+  background: radial-gradient(circle at 20% 20%, rgba(124,58,237,.12), transparent 40%),
+              radial-gradient(circle at 80% 50%, rgba(6,182,212,.12), transparent 40%);
+}
+#cta .shapes::before, #cta .shapes::after {
+  content: ''; position: absolute; border-radius: 50%;
+  filter: blur(24px); opacity: .6;
+}
+#cta .shapes::before {
+  width: 140px; height: 140px; background: #7c3aed; left: 10%; top: 30%;
+  animation: drift 10s ease-in-out infinite;
+}
+#cta .shapes::after {
+  width: 160px; height: 160px; background: #06b6d4; right: 15%; bottom: 25%;
+  animation: drift 12s ease-in-out infinite;
+}
+@keyframes drift {
+  0%,100% { transform: translate(0,0); }
+  50% { transform: translate(10px, -10px); }
+}
+
+/* Auth forms: glass morph + floating labels */
+.glass-card {
+  background: rgba(255,255,255,.25);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.12);
+}
+[data-bs-theme="dark"] .glass-card {
+  background: rgba(31,41,55,.35);
+  border-color: rgba(255,255,255,.12);
+}
+
+.form-floating-label {
+  position: relative;
+  margin-bottom: 1rem;
+}
+.form-floating-label input,
+.form-floating-label input.form-control {
+  padding-top: 1.25rem;
+  padding-bottom: .5rem;
+}
+.form-floating-label label {
+  position: absolute; left: .75rem; top: .65rem;
+  color: #6b7280; pointer-events: none;
+  transition: all .2s ease;
+  background: transparent;
+}
+.form-floating-label input:focus + label,
+.form-floating-label input:not(:placeholder-shown) + label {
+  top: -.5rem; left: .5rem; font-size: .75rem;
+  background: var(--bs-body-bg); padding: 0 .25rem;
+  color: #2563eb;
+}
+
+/* Dashboard heatmap */
 .heatmap-grid {
   display: grid;
   grid-template-columns: repeat(30, 18px);
