@@ -28,6 +28,12 @@ def index():
     # Calories intake vs goal (today)
     total_cal_today = db.session.query(func.sum(Nutrition.calories)).filter_by(user_id=current_user.id, date=today).scalar() or 0
     remaining_cal_today = max(0, (current_user.calorie_goal or 0) - total_cal_today)
+    pct_cal_today = 0
+    try:
+        goal = float(current_user.calorie_goal or 0)
+        pct_cal_today = int(min(100, ((float(total_cal_today) / (goal if goal > 0 else 1)) * 100)))
+    except Exception:
+        pct_cal_today = 0
 
     # Weight progress chart (last 30 days)
     start_month = today - timedelta(days=30)
@@ -59,6 +65,7 @@ def index():
         day_counts=day_counts,
         total_cal_today=total_cal_today,
         remaining_cal_today=remaining_cal_today,
+        pct_cal_today=pct_cal_today,
         weight_points=weight_points,
         freq_by_day=freq_by_day,
         stats={"total_workouts": total_workouts, "total_time": total_time, "avg_calories_burned": int(avg_calories_burned)},
