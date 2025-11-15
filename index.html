@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FitTrack - Static Preview</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    .hero {
+      background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+      color: white;
+      border-radius: 0.75rem;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">FitTrack</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars"
+            aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbars">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><span class="nav-link active">Preview</span></li>
+      </ul>
+      <div class="text-end">
+        <a class="btn btn-outline-light" href="https://github.com/" target="_blank" rel="noreferrer">Docs</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="container my-4">
+  <div class="hero mb-4">
+    <h1 class="h3 mb-2">Static Preview</h1>
+    <p class="mb-0">This is a static preview demonstrating the UI. The real app is a Flask server and must run locally or on a dynamic host to use authentication, forms, database, and API features.</p>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="fw-bold">Recent Workouts</span>
+          <button class="btn btn-sm btn-primary" disabled>Quick Add</button>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">Cardio - 2025-01-09</div>
+              <small class="text-muted">30 min, 250 kcal</small>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" disabled>View</button>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">Strength - 2025-01-08</div>
+              <small class="text-muted">45 min, 300 kcal</small>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" disabled>View</button>
+          </li>
+          <li class="list-group-item">Log in to see your real data.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-header fw-bold">Weekly Activity</div>
+        <div class="card-body">
+          <div class="small text-muted mb-2">Workout counts and calories for last 7 days.</div>
+          <canvas id="chartCalories" height="140"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-header fw-bold">Weight Progress (30 days)</div>
+        <div class="card-body">
+          <canvas id="chartWeight" height="180"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card h-100">
+        <div class="card-header fw-bold">Today Calories vs Goal</div>
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="display-6">1650</div>
+              <div class="text-muted">Calories consumed today</div>
+            </div>
+            <div>
+              <div class="display-6">350</div>
+              <div class="text-muted">Remaining (Goal: 2000)</div>
+            </div>
+          </div>
+          <div class="progress mt-3">
+            <div class="progress-bar" role="progressbar" style="width: 82%">82%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header fw-bold">Workout Frequency (30-day heatmap)</div>
+        <div class="card-body">
+          <div id="heatmap" class="heatmap-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info mt-4">
+    To run the full application (authentication, database, charts):
+    <ol class="mb-0">
+      <li>Create a virtualenv and install dependencies: <code>pip install -r requirements.txt</code></li>
+      <li>Run: <code>python main.py</code></li>
+      <li>Open: <a href="http://127.0.0.1:5000/dashboard/" target="_blank" rel="noreferrer">http://127.0.0.1:5000/dashboard/</a></li>
+    </ol>
+  </div>
+</main>
+
+<footer class="text-center text-muted py-4">
+  <small>&copy; 2025 FitTrack</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function() {
+  // Sample weight series
+  const weightData = [];
+  const today = new Date();
+  for (let i = 30; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const y = 75 + Math.sin(i/5) * 1.5 + (Math.random() - 0.5);
+    weightData.push({ x: d.toISOString().slice(0,10), y: Math.round(y * 10)/10 });
+  }
+
+  // Weight chart
+  const ctxW = document.getElementById("chartWeight");
+  if (ctxW) {
+    new Chart(ctxW, {
+      type: "line",
+      data: {
+        labels: weightData.map(p => p.x),
+        datasets: [{
+          label: "Weight (kg)",
+          data: weightData.map(p => p.y),
+          borderColor: "#0d6efd",
+          backgroundColor: "rgba(13,110,253,.15)",
+          tension: .2,
+        }]
+      },
+      options: {
+        scales: { x: { type: "category" }, y: { beginAtZero: false } },
+        plugins: { legend: { display: true } }
+      }
+    });
+  }
+
+  // Calories chart
+  const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const cal = [1800, 1950, 2100, 1700, 2000, 2200, 1600];
+  const goal = 2000;
+  const ctxC = document.getElementById("chartCalories");
+  if (ctxC) {
+    new Chart(ctxC, {
+      type: "bar",
+      data: {
+        labels: days,
+        datasets: [
+          { label: "Calories", data: cal, backgroundColor: "#198754" },
+          { label: "Goal", data: new Array(days.length).fill(goal), type: "line", borderColor: "#dc3545" }
+        ]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { display: true } }
+      }
+    });
+  }
+
+  // Heatmap with random counts
+  const container = document.getElementById("heatmap");
+  if (container) {
+    for (let i = 29; i >= 0; i--) {
+      const count = Math.floor(Math.random() * 5); // 0..4
+      const cell = document.createElement("div");
+      cell.className = `heat-cell level-${count}`;
+      container.appendChild(cell);
+    }
+  }
+})();
+</script>
+</body>
+</html>
